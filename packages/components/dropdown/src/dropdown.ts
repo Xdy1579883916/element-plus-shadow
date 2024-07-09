@@ -9,6 +9,7 @@ import {
 
 import type { Options } from '@popperjs/core'
 import type { ButtonProps, ButtonType } from '@element-plus/components/button'
+import type { ElTooltipProps } from '@element-plus/components/tooltip'
 import type { Placement } from '@element-plus/components/popper'
 import type { ComponentInternalInstance, ComputedRef } from 'vue'
 import type { Nullable } from '@element-plus/utils'
@@ -86,6 +87,9 @@ export const dropdownProps = buildProps({
   },
   buttonProps: {
     type: definePropType<ButtonProps>(Object),
+  },
+  tooltipProps: {
+    type: definePropType<ElTooltipProps>(Object),
   },
   teleported: useTooltipContentProps.teleported,
 } as const)
