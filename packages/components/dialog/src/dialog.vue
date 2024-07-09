@@ -1,7 +1,7 @@
 <template>
   <teleport
-    :to="appendTo"
-    :disabled="appendTo !== 'body' ? false : !appendToBody"
+    :to="mountTo"
+    :disabled="mountTo !== 'body' ? false : !appendToBody"
   >
     <transition
       name="dialog-fade"
@@ -77,7 +77,12 @@
 <script lang="ts" setup>
 import { computed, provide, ref, useSlots } from 'vue'
 import { ElOverlay } from '@element-plus/components/overlay'
-import { useDeprecated, useNamespace, useSameTarget } from '@element-plus/hooks'
+import {
+  useAppRoot,
+  useDeprecated,
+  useNamespace,
+  useSameTarget,
+} from '@element-plus/hooks'
 import ElFocusTrap from '@element-plus/components/focus-trap'
 import ElDialogContent from './dialog-content.vue'
 import { dialogInjectionKey } from './constants'
@@ -92,6 +97,13 @@ defineOptions({
 const props = defineProps(dialogProps)
 defineEmits(dialogEmits)
 const slots = useSlots()
+const appRoot = useAppRoot()
+const mountTo = computed(() => {
+  if (props.appendTo !== 'body') {
+    return props.appendTo
+  }
+  return appRoot
+})
 
 useDeprecated(
   {

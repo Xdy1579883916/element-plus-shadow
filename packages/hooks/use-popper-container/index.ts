@@ -2,33 +2,36 @@ import { computed, onBeforeMount } from 'vue'
 import { isClient } from '@element-plus/utils'
 import { useGetDerivedNamespace } from '../use-namespace'
 import { useIdInjection } from '../use-id'
-
-let cachedContainer: HTMLElement
+import { useAppRoot } from '../use-app-root'
 
 export const usePopperContainerId = () => {
   const namespace = useGetDerivedNamespace()
   const idInjection = useIdInjection()
+  const appRoot = useAppRoot()
 
   const id = computed(() => {
     return `${namespace.value}-popper-container-${idInjection.prefix}`
   })
   const selector = computed(() => `#${id.value}`)
+  const target = computed(() => appRoot.querySelector(`#${id.value}`))
 
   return {
     id,
     selector,
+    target,
   }
 }
 
-const createContainer = (id: string) => {
+const createContainer = (appRoot: HTMLElement | ShadowRoot, id: string) => {
   const container = document.createElement('div')
   container.id = id
-  document.body.appendChild(container)
+  appRoot.appendChild(container)
   return container
 }
 
 export const usePopperContainer = () => {
   const { id, selector } = usePopperContainerId()
+  const appRoot = useAppRoot()
   onBeforeMount(() => {
     if (!isClient) return
 
@@ -37,9 +40,9 @@ export const usePopperContainer = () => {
     // for this we need to disable the caching since it's not really needed
     if (
       process.env.NODE_ENV === 'test' ||
-      (!cachedContainer && !document.body.querySelector(selector.value))
+      (!appRoot.cachedContainer && !appRoot.querySelector(selector.value))
     ) {
-      cachedContainer = createContainer(id.value)
+      appRoot.cachedContainer = createContainer(appRoot, id.value)
     }
   })
 

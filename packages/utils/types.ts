@@ -26,6 +26,11 @@ export const isElement = (e: unknown): e is Element => {
   return e instanceof Element
 }
 
+export const isShadowRoot = (e: unknown): e is ShadowRoot => {
+  if (typeof ShadowRoot === 'undefined') return false
+  return e instanceof ShadowRoot
+}
+
 export const isPropAbsent = (prop: unknown): prop is null | undefined => {
   return isNil(prop)
 }

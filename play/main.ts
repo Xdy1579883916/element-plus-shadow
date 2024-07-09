@@ -14,5 +14,19 @@ import '@element-plus/theme-chalk/src/message.scss'
   const App = (await file()).default
   const app = createApp(App)
 
-  app.mount('#play')
+  const container = document.querySelector('#play')!
+  const shadowDOM = container.attachShadow?.({ mode: 'open' }) || container
+  const root = document.createElement('div')
+  shadowDOM.appendChild(root)
+  app.provide('appRoot', root)
+  app.mount(root)
+
+  const app2 = createApp(App)
+  const root2 = document.createElement('div')
+  shadowDOM.appendChild(root2)
+  app2.provide('appRoot', root2)
+  app2.mount(root2)
+
+  // const app3 = createApp(App)
+  // app3.mount('#app3')
 })()

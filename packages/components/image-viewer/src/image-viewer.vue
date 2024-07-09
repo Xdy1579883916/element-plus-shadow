@@ -1,5 +1,5 @@
 <template>
-  <teleport to="body" :disabled="!teleported">
+  <teleport :to="appRoot" :disabled="!teleported">
     <transition name="viewer-fade" appear>
       <div
         ref="wrapper"
@@ -86,7 +86,12 @@ import {
 } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import { throttle } from 'lodash-unified'
-import { useLocale, useNamespace, useZIndex } from '@element-plus/hooks'
+import {
+  useAppRoot,
+  useLocale,
+  useNamespace,
+  useZIndex,
+} from '@element-plus/hooks'
 import { EVENT_CODE } from '@element-plus/constants'
 import { keysOf } from '@element-plus/utils'
 import ElIcon from '@element-plus/components/icon'
@@ -127,6 +132,7 @@ const emit = defineEmits(imageViewerEmits)
 const { t } = useLocale()
 const ns = useNamespace('image-viewer')
 const { nextZIndex } = useZIndex()
+const appRoot = useAppRoot()
 const wrapper = ref<HTMLDivElement>()
 const imgRefs = ref<HTMLImageElement[]>([])
 

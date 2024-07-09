@@ -9,6 +9,7 @@ import rename from 'gulp-rename'
 import consola from 'consola'
 import postcss from 'postcss'
 import cssnano from 'cssnano'
+import replace from 'gulp-replace'
 import { epOutput } from '@element-plus/build-utils'
 import type Vinly from 'vinyl'
 
@@ -72,6 +73,7 @@ function buildThemeChalk() {
     .pipe(sass.sync())
     .pipe(autoprefixer({ cascade: false }))
     .pipe(compressWithCssnano())
+    .pipe(processRootAndHost())
     .pipe(
       rename((path) => {
         if (!noElPrefixFile.test(path.basename)) {
@@ -80,6 +82,10 @@ function buildThemeChalk() {
       })
     )
     .pipe(dest(distFolder))
+}
+
+function processRootAndHost() {
+  return replace(':root', ':root,:host')
 }
 
 /**

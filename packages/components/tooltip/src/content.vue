@@ -60,7 +60,7 @@ defineOptions({
 
 const props = defineProps(useTooltipContentProps)
 
-const { selector } = usePopperContainerId()
+const { selector, target } = usePopperContainerId()
 const ns = useNamespace('tooltip')
 // TODO any is temporary, replace with `InstanceType<typeof ElPopperContent> | null` later
 const contentRef = ref<any>(null)
@@ -102,7 +102,7 @@ const shouldShow = computed(() => {
 })
 
 const appendTo = computed(() => {
-  return props.appendTo || selector.value
+  return props.appendTo || target.value || selector.value
 })
 
 const contentStyle = computed(() => (props.style ?? {}) as any)
