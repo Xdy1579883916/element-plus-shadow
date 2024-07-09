@@ -47,8 +47,8 @@ function createDocumentHandler(
         popperRef: HTMLElement
       }>
     ).popperRef
-    const mouseUpTarget = mouseup.target as Node
-    const mouseDownTarget = mousedown?.target as Node
+    const mouseUpTarget = mouseup?.target as Element
+    const mouseDownTarget = mousedown?.target as Element
     const isBound = !binding || !binding.instance
     const isTargetExists = !mouseUpTarget || !mouseDownTarget
     const isContainedByEl =
@@ -62,13 +62,25 @@ function createDocumentHandler(
     const isContainedByPopper =
       popperRef &&
       (popperRef.contains(mouseUpTarget) || popperRef.contains(mouseDownTarget))
+    // 如果是 ShadowDom, 另一种选择是检查事件光标相对于目标元素的偏移量：
+    // @ts-ignore
+    const pop: Element = binding.arg
+    let isInside = false
+    if (pop && (mouseUpTarget?.shadowRoot || mouseDownTarget?.shadowRoot)) {
+      const { top, right, bottom, left } = pop.getBoundingClientRect()
+      const { pageX, pageY } = mouseup
+      isInside =
+        pageX >= left && pageX <= right && pageY >= top && pageY <= bottom
+    }
+
     if (
       isBound ||
       isTargetExists ||
       isContainedByEl ||
       isSelf ||
       isTargetExcluded ||
-      isContainedByPopper
+      isContainedByPopper ||
+      isInside
     ) {
       return
     }
