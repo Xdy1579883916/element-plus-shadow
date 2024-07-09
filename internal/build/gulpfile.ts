@@ -1,20 +1,22 @@
 import path from 'path'
-import { copyFile, mkdir } from 'fs/promises'
+import { copyFile, mkdir, writeFile } from 'fs/promises'
 import { copy } from 'fs-extra'
 import { parallel, series } from 'gulp'
-import {
-  buildOutput,
-  epOutput,
-  epPackage,
-  projRoot,
-} from '@element-plus/build-utils'
+import { buildOutput, epOutput, projRoot } from '@element-plus/build-utils'
+import pkg from '../../packages/element-plus/package.json'
+import { version } from '../../packages/element-plus/version'
 import { buildConfig, run, runTask, withTaskName } from './src'
 import type { TaskFunction } from 'gulp'
 import type { Module } from './src'
 
+pkg.version = version
 export const copyFiles = () =>
   Promise.all([
-    copyFile(epPackage, path.join(epOutput, 'package.json')),
+    writeFile(
+      path.join(epOutput, 'package.json'),
+      JSON.stringify(pkg, null, 2)
+    ),
+    // copyFile(epPackage, path.join(epOutput, 'package.json')),
     copyFile(
       path.resolve(projRoot, 'README.md'),
       path.resolve(epOutput, 'README.md')
