@@ -283,6 +283,7 @@
           >
             <slot name="footer" />
           </div>
+          <slot v-if="$slots.action" name="action" />
         </el-select-menu>
       </template>
     </el-tooltip>
