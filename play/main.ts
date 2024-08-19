@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
-import '@element-plus/theme-chalk/src/dark/css-vars.scss'
-import '@element-plus/theme-chalk/src/notification.scss'
-import '@element-plus/theme-chalk/src/message-box.scss'
-import '@element-plus/theme-chalk/src/message.scss'
+// import '@element-plus/theme-chalk/src/dark/css-vars.scss'
+// import '@element-plus/theme-chalk/src/notification.scss'
+// import '@element-plus/theme-chalk/src/message-box.scss'
+// import '@element-plus/theme-chalk/src/message.scss'
 ;(async () => {
   const apps = import.meta.glob('./src/*.vue')
   const name = location.pathname.replace(/^\//, '') || 'App'
@@ -16,6 +16,15 @@ import '@element-plus/theme-chalk/src/message.scss'
 
   const container = document.querySelector('#play')!
   const shadowDOM = container.attachShadow?.({ mode: 'open' }) || container
+
+  import('@element-plus/theme-chalk/dist/index.css').then((css) => {
+    if (shadowDOM) {
+      const style = document.createElement('style')
+      style.innerHTML = css.default
+      shadowDOM.appendChild(style)
+    }
+  })
+
   const root = document.createElement('div')
   shadowDOM.appendChild(root)
   app.provide('appRoot', root)
